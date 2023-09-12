@@ -16,27 +16,45 @@ Se puede usar este recurso a traves de Postman o, a su vez, se puede utilizar la
     `cd "C:\Ruta_Ejemplo"`
 4. Clonar el repositorio usando el comando:
 
-    `git clone https://github.com/JeanPierreVillacis/ProyectoGrupo5CYESW.git`
+    ```sh
+    git clone https://github.com/JeanPierreVillacis/ProyectoGrupo5CYESW.git
+    ```
 5. Abrir el **Símbolo del sistema** (Windows) o la **Terminal** (Linux o Mac) y dirigirse al directorio donde se clonó el repositorio.
 6. Crear un entorno virtual de Python, en este caso tendrá el nombre de apicys pero puede ser cualquiera.
 
-    `python -m venv apicys-env`
+    ```sh
+    python -m venv apicys-env
+    ```
 7. Activar el entorno virtual.
 
-    Windows: `apicys-env\Scripts\activate.bat`
+    Windows: 
     
-    Linux o Mac: `source apicys-env/bin/activate`
+    ```cmd
+    apicys-env\Scripts\activate.bat
+    ```
+    
+    Linux o Mac: 
+    
+    ```sh
+    source apicys-env/bin/activate
+    ```
 8. Verificar que el entorno virtual esté activado, para esto se tiene que observar que en la linea de comandos se haya puesto el nombre del entorno virtual entre parentesis antes de la ruta sobre la que se esté trabajando, por ejemplo:
 
     `(apicys-env) C:\Ruta_Ejemplo`
 9. Instalar **fastapi** y el servidor **uvicorn**.
 
-    `pip install fastapi`
+    ```sh
+    pip install fastapi
+    ```
 
-    `pip install uvicorn`
+    ```sh
+    pip install uvicorn
+    ```
 10. Levantar el servidor de **uvicorn** para comenzar a usar la API usando el siguiente comando.
 
-    `uvicorn main:app --reload`
+    ```sh
+    uvicorn main:app --reload
+    ```
 
     En este caso, se está especificando a uvicorn que busque dentro del fichero *main.py* la variable *app* que deberá ser una instancia de la clase *FastAPI*.
 
