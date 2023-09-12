@@ -144,6 +144,6 @@ La API cuenta con la información de algunos libros que está guardada en una li
     ```
     La decoración *@app.delete()* se utiliza en FastAPI para definir una ruta DELETE en la aplicación web que espera eliminar un libro específico identificado por el valor de "indice" en la URL. La respuesta generada por esta ruta debe cumplir con las especificaciones del modelo "Libro" y es una última referéncia del recurso eliminado.
 
-Finalmente, se han logrado documentar los aspectos más importantes de la API desarrollada con la finalidad de guiar a las personas interesadas en lo relacionado a la estructura y funcionamiento de la API. Para proporcionar un ejemplo de uso de la API se agregará un fichero PDF donde se muestre el uso de cada uno de los métodos mencionados anteriormente.
+Finalmente, se han logrado documentar los aspectos más importantes de la API desarrollada con la finalidad de guiar a las personas interesadas en lo relacionado a su estructura y funcionamiento. Para proporcionar un ejemplo de su uso se agregará un fichero PDF al repositorio dónde se muestre el uso de cada uno de los métodos mencionados anteriormente.
 
 *Grupo 5 - Construcción y Evolución de Software - Escuela Politécnica Nacional*
