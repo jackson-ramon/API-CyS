@@ -46,16 +46,86 @@ Varias partes de la información presentada en este apartado no son de autoría 
 
 **Framework FastAPI**: https://fastapi.tiangolo.com/
 
-### Uso de la API
-1. Tomar la dirección IP asiganada al momento de levantar el servidor de uvicorn.
+### Funcionamiento de la API
+- **Acceder al servicio REST**
+    1. Tomar la dirección IP asiganada al momento de levantar el servidor de uvicorn.
 
-    `Uvicorn running on ←[1mhttp://127.0.0.1:8000←[`
-2. Pegar la dirección IP en cualquier navegador y de esta forma se podría empezar a interactuar con la API. No obstante, en este caso unicamente se podrán hacer peticiones GET.
-3. Para trabajar con las demas peticiones HTTP se puede usar **Postman** o usar la **Interfaz Web** que provee FastAPI, para este caso, se usará la segunda opción mencionada.
-4. Luego de ingresar la dirección IP en el navegador, especificar que se desea acceder al recurso **docs** de la API, como se muestra a continuación.
+        `Uvicorn running on ←[1mhttp://127.0.0.1:8000←[`
+    2. Pegar la dirección IP en cualquier navegador y de esta forma se podría empezar a interactuar con la API. No obstante, en este caso unicamente se podrán hacer peticiones GET.
+    3. Para trabajar con las demas peticiones HTTP se puede usar **Postman** o usar la **Interfaz Web** que provee FastAPI, para este caso, se usará la segunda opción mencionada.
+    4. Luego de ingresar la dirección IP en el navegador, especificar que se desea acceder al recurso **docs** de la API, como se muestra a continuación.
 
-    `http://127.0.0.1:8000/docs`
+        `http://127.0.0.1:8000/docs`
 
-    De esta forma, se accederá a una interfaz web como la que se muestra a continuación.
+        De esta forma, se accederá a una interfaz web como la que se muestra a continuación.
 
-    ![Alt text](image.png)
+        ![Alt text](image.png)
+- **Lógica de los métodos de petición HTTP**
+
+Para trabajar con este apartado se creó una entidad Libro (clase) que cuenta con cuatro atributos que son título, autor, páginas y editorial.
+
+```python
+class Libro(BaseModel):
+    titulo: str
+    autor: str
+    paginas: int
+    editorial: Optional[str]
+```
+En este caso se puede observar que la clase *Libro* esta heredando de una clase padre llamada *BaseModel* que forma parte de la librería *pydantic*. El objetivo de esta heréncia es hacer que cada uno de los atributos acepte un tipo de datos en específico y así evitar inconsistencias al momento de trabajar con la API. Adicionalmente, esta clase permite especificar si un atributo es opcional de ingresar, como los es el caso para **editorial**.
+
+La API cuenta con la información de algunos libros que está guardada en una lista, con la finalidad de permitir probar las funcionalidades sin la necesidad de tener que crear previamente algunos registros. Teniendo en cuenta lo mencionado, continuación, se revisará la lógica de los métodos de petición GET, POST, PUT y DELETE.
+1. **GET**
+
+    Para solventar este método de petición se hace uso de la función *obtener_libro* que está dentro del archivo main.py. Recibe como parámetro un indice de tipo entero que corresponde a la posición que tiene un libro dentro de la lista que se mencionó anteriormente.
+
+    ```python
+    @app.get("/libros/{indice}", response_model=Libro)
+    def obtener_libro(indice: int):
+        if indice < 0 or indice >= len(base_de_datos):
+            raise HTTPException(status_code=404, detail="Libro no encontrado")
+        return base_de_datos[indice]
+    ```
+    La decoración *@app.get()* se utiliza para definir una ruta de tipo GET en una aplicación FastAPI. De esta forma, se especifica que se espera un parámetro "indice" en la URL y se devuelve un objeto JSON que sigue la estructura del modelo "Libro".
+2. **POST**
+
+    Para solventar este método de petición se hace uso de la función *crear_libro* que está dentro del archivo main.py. Recibe como parámetro un objeto de tipo Libro que será almacenado en la lista de libros.
+
+    ```python
+    @app.post("/libros/", response_model=Libro)
+    def crear_libro(libro: Libro):
+        base_de_datos.append(libro)
+        return libro
+    ```
+    La decoración *@app.post()* se utiliza para definir una ruta POST en la aplicación web que espera datos enviados mediante una solicitud POST y devuelve una respuesta que se ajusta al formato del modelo "Libro".
+3. **PUT**
+
+    Para solventar este método de petición se hace uso de la función *actualizar_libro* que está dentro del archivo main.py. Recibe como parámetro un indice de tipo entero y un objeto de tipo Libro a ser actualizado.
+
+    ```python
+    @app.put("/libros/{indice}", response_model=Libro)
+    def actualizar_libro(indice: int, libro: Libro):
+        if indice < 0 or indice >= len(base_de_datos):
+            raise HTTPException(status_code=404, detail="Libro no encontrado")
+        
+        base_de_datos[indice] = libro
+        return libro
+    ```
+    La decoración *@app.put()* se utiliza en FastAPI para definir una ruta PUT en la aplicación web que espera actualizar un libro específico identificado por el valor de "indice" en la URL. La respuesta generada por esta ruta debe cumplir con las especificaciones del modelo "Libro".
+4. **DELETE**
+
+    Para solventar este método de petición se hace uso de la función *eliminar_libro* que está dentro del archivo main.py. Recibe como parámetro un indice de tipo entero que está asociado al libro que se desea eliminar.
+
+    ```python
+    @app.delete("/libros/{indice}", response_model=Libro)
+    def eliminar_libro(indice: int):
+        if indice < 0 or indice >= len(base_de_datos):
+            raise HTTPException(status_code=404, detail="Libro no encontrado")
+        
+        libro_eliminado = base_de_datos.pop(indice)
+        return libro_eliminado
+    ```
+    La decoración *@app.delete()* se utiliza en FastAPI para definir una ruta DELETE en la aplicación web que espera eliminar un libro específico identificado por el valor de "indice" en la URL. La respuesta generada por esta ruta debe cumplir con las especificaciones del modelo "Libro" y es una última referéncia del recurso eliminado.
+
+Finalmente, se han logrado documentar los aspectos más importantes de la API desarrollada con la finalidad de guiar a las personas interesadas en lo relacionado a la estructura y funcionamiento de la API. Para proporcionar un ejemplo de uso de la API se agregará un fichero PDF donde se muestre el uso de cada uno de los métodos mencionados anteriormente.
+
+*Grupo 5 - Construcción y Evolución de Software - Escuela Politécnica Nacional*
